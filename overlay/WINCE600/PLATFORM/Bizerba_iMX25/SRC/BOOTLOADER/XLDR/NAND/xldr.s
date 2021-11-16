@@ -22,6 +22,7 @@
 ;
 ;------------------------------------------------------------------------------
     INCLUDE armmacros.s
+    INCLUDE common_uart.inc
     INCLUDE mx25_base_regs.inc
     INCLUDE mx25_base_mem.inc
     INCLUDE mx25_esdramc.inc    
@@ -73,6 +74,44 @@ pTOC    DCD -1
 endless
     ;hb b	endless
     nop
+
+uart_init
+    ldr     r0, =(0x01)
+    ldr     r1, =(CSP_BASE_REG_PA_UART1 + UART_UCR1_OFFSET)
+    str     r0, [r1]
+
+    ldr     r0, =(0x2127)
+    ldr     r1, =(CSP_BASE_REG_PA_UART1 + UART_UCR2_OFFSET)
+    str     r0, [r1]
+
+    ldr     r0, =(0x0704)
+    ldr     r1, =(CSP_BASE_REG_PA_UART1 + UART_UCR3_OFFSET)
+    str     r0, [r1]
+
+    ldr     r0, =(0x7C)
+    ldr     r1, =(CSP_BASE_REG_PA_UART1 + UART_UCR4_OFFSET)
+    str     r0, [r1]
+
+    ldr     r0, =(0x091E)
+    ldr     r1, =(CSP_BASE_REG_PA_UART1 + UART_UFCR_OFFSET)
+    str     r0, [r1]
+
+    ;UBIR = (BAUDRATE / 100) - 1
+    ;UBIR = (115200 / 100) - 1 = 1151
+    ldr     r0, =(1151)
+    ldr     r1, =(CSP_BASE_REG_PA_UART1 + UART_UBIR_OFFSET)
+    str     r0, [r1]
+
+    ;UBMR = (UART_REF_CLK / 1600) - 1
+    ;suppose UART_REF_CLK is 64MHz
+    ldr     r0, =(39999)
+    ldr     r1, =(CSP_BASE_REG_PA_UART1 + UART_UBMR_OFFSET)
+    str     r0, [r1]
+
+    ;Enable the TRDY and RRDY interrupts
+    ldr     r0, =(0x2201)
+    ldr     r1, =(CSP_BASE_REG_PA_UART1 + UART_UCR1_OFFSET)
+    str     r0, [r1]
     
     ; SWAP the BBI because nfc automatically read first page out without BBI swap.
     ; The swap must be done at very beginning of the XLDR to avoid code mismatch.
@@ -241,6 +280,14 @@ detect_nand
 	and		r2,r2,r0
 	and		r3,r3,r0
 	
+	cmp		r2,#CYP_S34ML01G200_MFG_ID
+	bne		not_cypress
+	; device is cypress
+    ldr     r10,  =(flash_parameters_CYPRESS_S34ML01G200)
+	cmp		r3,#CYP_S34ML01G200_DEV_ID
+	beq		nand_detected	
+	b		detect_nand
+not_cypress
 	cmp		r2,#NMX_N01_MFG_ID
 	bne		not_numonix
 	; device is numonix
@@ -957,6 +1004,14 @@ BIZ_NAND_BLOCK_CNT		EQU	(fp_nand_block_cnt - flash_parameters)
 BIZ_BBI_PAGE_NUM		EQU	(fp_bbi_page_num - flash_parameters)
 BIZ_BBI_PAGE_ADDR_2		EQU (fp_bbi_page_addr_2 - flash_parameters)
 
+flash_parameters_CYPRESS_S34ML01G200
+						dcd	CYP_S34ML01G200_NAND_PAGE_CNT
+						dcd	CYP_S34ML01G200_NAND_PAGE_CNT_LSH
+						dcd	CYP_S34ML01G200_NAND_BLOCK_SIZE
+						dcd	CYP_S34ML01G200_NAND_BLOCK_CNT
+						dcd	CYP_S34ML01G200_BBI_PAGE_NUM
+						dcd	CYP_S34ML01G200_BBI_PAGE_ADDR_2
+
 flash_parameters_numonix_nand01gw
 						dcd	NMX_N01_NAND_PAGE_CNT
 						dcd	NMX_N01_NAND_PAGE_CNT_LSH
@@ -996,7 +1051,6 @@ flash_parameters_samsung_k9f2g08
 						dcd	SAM_K9F2G08_NAND_BLOCK_CNT
 						dcd	SAM_K9F2G08_BBI_PAGE_NUM
 						dcd	SAM_K9F2G08_BBI_PAGE_ADDR_2
-
 
     END
 

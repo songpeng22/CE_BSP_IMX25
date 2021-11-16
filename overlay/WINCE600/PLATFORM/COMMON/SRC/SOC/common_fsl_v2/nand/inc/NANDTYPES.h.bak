@@ -142,54 +142,6 @@ NandChipInfo ChipInfo[] =
         0xD0,                                       //BYTE        CmdErase2
         {25, 16, 25, 20}                             //NANDTiming  DataSetup, DataHold, AddressSetup, DataSample ???
     },
-    //S34ML01G200 editing
-    {
-        {NAND, 1024, 2048 * 64, 64, 2048},          //FlashInfo   NAND/NOR, NumBlocks, BytesPerBlock, SectorsPerBlock, BytesPerSector
-        {0x01, 0xF1, 0x80, 0x1D},                   //BYTE        NANDCode[NANDID_LENGTH]
-        3,                                          //BYTE        NumBlockCycles; flash erase address cycle	soll 2 ???
-        5,                                          //BYTE        ChipAddrCycleNum; flash access address cycle soll	4 ???
-        8,                                          //BYTE        DataWidth
-        2,                                          //BYTE        BBMarkNum
-        {0,1},                                      //BYTE        BBMarkPage
-        6,                                          //BYTE        StatusBusyBit
-        0,                                          //BYTE        StatusErrorBit
-        64,                                         //WORD        SpareDataLength
-        0x70,                                       //BYTE        CmdReadStatus
-        0x00,                                       //BYTE        CmdRead1
-        0x30,                                       //BYTE        CmdRead2
-        0x90,                                       //BYTE        CmdReadId
-        0xff,                                       //BYTE        CmdReset
-        0x80,                                       //BYTE        CmdWrite1
-        0x10,                                       //BYTE        CmdWrite2
-        0x60,                                       //BYTE        CmdErase1
-        0xD0,                                       //BYTE        CmdErase2
-        {25, 16, 25, 20}                             //NANDTiming  DataSetup, DataHold, AddressSetup, DataSample ???
-    },
-# if 0
-    //S34ML01G200 editing
-    {
-        {NAND, 1024, 2048 * 64, 64, 2048},          //FlashInfo   NAND/NOR, NumBlocks, BytesPerBlock, SectorsPerBlock, BytesPerSector
-        {0x01, 0xF1, 0x80, 0x1D},                   //BYTE        NANDCode[NANDID_LENGTH]
-        3,                                          //BYTE        NumBlockCycles; flash erase address cycle	soll 2 ???
-        5,                                          //BYTE        ChipAddrCycleNum; flash access address cycle soll	4 ???
-        8,                                          //BYTE        DataWidth
-        3,                                          //BYTE        BBMarkNum
-        {0,1,63},                                      //BYTE        BBMarkPage
-        6,                                          //BYTE        StatusBusyBit
-        0,                                          //BYTE        StatusErrorBit
-        64,                                         //WORD        SpareDataLength
-        0x70,                                       //BYTE        CmdReadStatus
-        0x00,                                       //BYTE        CmdRead1
-        0x30,                                       //BYTE        CmdRead2
-        0x90,                                       //BYTE        CmdReadId
-        0xff,                                       //BYTE        CmdReset
-        0x80,                                       //BYTE        CmdWrite1
-        0x10,                                       //BYTE        CmdWrite2
-        0x60,                                       //BYTE        CmdErase1
-        0xD0,                                       //BYTE        CmdErase2
-        {25, 16, 25, 20}                             //NANDTiming  DataSetup, DataHold, AddressSetup, DataSample ???
-    },
-#endif
 # if 0
     //MT29F16G08
     {
@@ -291,12 +243,6 @@ NandChipInfoBizAddon ChipInfoBizAddon[] =
         1,                                          //BYTE        ClusterCount
     },
     //K9F2G08U0D tested
-    {
-        464,                                        //WORD        BBIMainAddr
-        FALSE,                                      //BYTE        ILSupport
-        1,                                          //BYTE        ClusterCount
-    },
-    //S34ML01G200 editing
     {
         464,                                        //WORD        BBIMainAddr
         FALSE,                                      //BYTE        ILSupport
